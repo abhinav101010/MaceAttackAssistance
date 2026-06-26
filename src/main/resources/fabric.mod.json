@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "maceattackassistance",
+  "version": "${version}",
+  "name": "MaceAttackAssistance",
+  "description": "Mace combat assistance mod for PvP",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.papack.maceattackassistance.client.MaceAttackAssistanceClient"
+    ],
+    "main": [
+      "com.papack.maceattackassistance.MaceAttackAssistanceFabric"
+    ],
+    "modmenu": [
+      "com.papack.maceattackassistance.client.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "maceattackassistance.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "fabric-api": "*",
+    "minecraft": "~26.2",
+    "java": ">=25"
+  },
+  "suggests": {
+    "modmenu": "*",
+    "cloth-config2": "*"
+  }
+}

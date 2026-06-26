@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "maceattackassistance",
+  "version": "5.0-rc",
+  "name": "MaceAttackAssistance-fabric-26.1.2",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.papack.maceattackassistance.client.MaceAttackAssistanceClient"
+    ],
+    "main": [
+      "com.papack.maceattackassistance.MaceAttackAssistanceFabric"
+    ]
+  },
+  "mixins": [
+    "maceattackassistance.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.2",
+    "fabric-api": "*",
+    "minecraft": "26.1.2"
+  },
+  "suggests": {
+    "modmenu": "*",
+    "cloth-config2": "*"
+  }
+}

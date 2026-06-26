@@ -1,0 +1,30 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.papack.maceattackassistance.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+  ],
+  "client": [
+    "CameraInvoker",
+    "ClientPlayerInteractionManagerInvoker",
+    "KeyBindingInvoker",
+    "MinecraftClientInvoker",
+    "MixinAbstractClientPlayerEntity",
+    "MixinClientPlayerInteractionManager",
+    "MixinClientPlayNetworkHandler",
+    "MixinDrawContext",
+    "MixinGameRenderer",
+    "MixinHeldItemRenderer",
+    "MixinKeyboardInput",
+    "MixinLivingEntityRenderer",
+    "MixinMinecraft",
+    "MixinMouse",
+    "MixinPlayerEntityRenderer",
+    "MixinPlayerListHud",
+    "MixinWorldRenderer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
