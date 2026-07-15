@@ -1,0 +1,37 @@
+# Build
+/build/
+/out/
+
+# Gradle
+.gradle/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+*.launch
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Minecraft
+run/
+runs/
+logs/
+crash-reports/
+saves/
+resourcepacks/
+shaderpacks/
+*.log
+
+# Fabric
+fabric-api.json
+
+# Config (user-specific)
+config/MaceAttackAssistance/
