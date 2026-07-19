@@ -15,6 +15,7 @@
     "MixinClientPlayerInteractionManager",
     "MixinGameRenderer",
     "MixinHeldItemRenderer",
+    "MixinInGameHud",
     "MixinKeyboardInput",
     "MixinLivingEntityRenderer",
     "MixinMouse",
