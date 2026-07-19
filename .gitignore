@@ -1,9 +1,12 @@
 # Build
-/build/
+*/build/*
 /out/
 
 # Gradle
-.gradle/
+*/.gradle/
+
+# Graphify
+*/graphify-out/
 
 # IDE
 .idea/

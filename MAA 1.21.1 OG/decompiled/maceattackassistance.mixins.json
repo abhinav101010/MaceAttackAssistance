@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.papack.maceattackassistance.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "MixinMinecraft"
+  ],
+  "client": [
+    "CameraInvoker",
+    "ClientPlayerInteractionManagerInvoker",
+    "KeyBindingInvoker",
+    "MixinAbstractClientPlayerEntity",
+    "MixinClientPlayerInteractionManager",
+    "MixinGameRenderer",
+    "MixinHeldItemRenderer",
+    "MixinKeyboardInput",
+    "MixinLivingEntityRenderer",
+    "MixinMouse",
+    "MixinPlayerEntityRenderer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "MAA-fabric-1.21.1-refmap.json"
+}
