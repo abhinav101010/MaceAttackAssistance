@@ -729,30 +729,38 @@ implements ClientModInitializer {
     }
 
     public static void chargeJump(ClientPlayerEntity clientPlayer, ClientPlayerInteractionManager interactionManager) {
-        Hand hand;
-        if (clientPlayer != null && interactionManager != null && (hand = Utils.getHandHoldingWindCharge(MinecraftClient.getInstance(), clientPlayer)) != null) {
-            JumpController.setChargeJumpCounter(1);
-            float prevPitch = clientPlayer.getPitch();
-            clientPlayer.setPitch(90.0f);
-            clientPlayer.swingHand(hand);
-            interactionManager.interactItem((PlayerEntity)clientPlayer, hand);
-            clientPlayer.setPitch(prevPitch);
-            counterAfterChargeJump = 20;
-            DebugScreen.lastY = clientPlayer.getY();
-            Debug.previous_y = -64.0;
+        if (clientPlayer != null && interactionManager != null) {
+            int windChargeSlot = Utils.findWindChargeSlot(clientPlayer);
+            if (windChargeSlot >= 0) {
+                JumpController.setChargeJumpCounter(1);
+                int prevSlot = clientPlayer.getInventory().getSelectedSlot();
+                clientPlayer.getInventory().setSelectedSlot(windChargeSlot);
+                float prevPitch = clientPlayer.getPitch();
+                clientPlayer.setPitch(90.0f);
+                clientPlayer.swingHand(Hand.MAIN_HAND);
+                interactionManager.interactItem((PlayerEntity)clientPlayer, Hand.MAIN_HAND);
+                clientPlayer.setPitch(prevPitch);
+                clientPlayer.getInventory().setSelectedSlot(prevSlot);
+                counterAfterChargeJump = 20;
+                DebugScreen.lastY = clientPlayer.getY();
+                Debug.previous_y = -64.0;
+            }
         }
         requireChargeJump = false;
     }
 
-    public static void sneakChargeJump(ClientPlayerEntity clientPlayer, Hand hand) {
+    public static void sneakChargeJump(ClientPlayerEntity clientPlayer, int windChargeSlot) {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerInteractionManager interactionManager = client.interactionManager;
-        if (clientPlayer != null && hand != null && interactionManager != null) {
+        if (clientPlayer != null && windChargeSlot >= 0 && interactionManager != null) {
+            int prevSlot = clientPlayer.getInventory().getSelectedSlot();
+            clientPlayer.getInventory().setSelectedSlot(windChargeSlot);
             float prevPitch = clientPlayer.getPitch();
             clientPlayer.setPitch(90.0f);
-            clientPlayer.swingHand(hand);
-            interactionManager.interactItem((PlayerEntity)clientPlayer, hand);
+            clientPlayer.swingHand(Hand.MAIN_HAND);
+            interactionManager.interactItem((PlayerEntity)clientPlayer, Hand.MAIN_HAND);
             clientPlayer.setPitch(prevPitch);
+            clientPlayer.getInventory().setSelectedSlot(prevSlot);
             counterAfterChargeJump = 20;
             DebugScreen.lastY = clientPlayer.getY();
             Debug.previous_y = -64.0;

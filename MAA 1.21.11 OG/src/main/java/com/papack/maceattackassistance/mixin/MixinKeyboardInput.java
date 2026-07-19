@@ -54,13 +54,13 @@ public class MixinKeyboardInput {
 
     @Redirect(method={"tick()V"}, at=@At(value="INVOKE", target="Lnet/minecraft/client/option/KeyBinding;isPressed()Z"))
     private boolean jumpKeyIsPressed(KeyBinding instance) {
-        Hand hand;
+        int windChargeSlot;
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity clientPlayer = client.player;
         ClientPlayerInteractionManager interactionManager = client.interactionManager;
         this.wallClimbingStatus = WallClimbing.resetClimbingStatus();
-        if (client.currentScreen == null && clientPlayer != null && interactionManager != null && Config.JUMP_ASSIST && this.verifyPlayerCondition(client, clientPlayer) && (hand = Utils.getHandHoldingWindCharge(client, clientPlayer)) != null) {
-            ItemStack windChargeStack = clientPlayer.getStackInHand(hand);
+        if (client.currentScreen == null && clientPlayer != null && interactionManager != null && Config.JUMP_ASSIST && this.verifyPlayerCondition(client, clientPlayer) && (windChargeSlot = Utils.findWindChargeSlot(clientPlayer)) >= 0) {
+            ItemStack windChargeStack = clientPlayer.getInventory().getStack(windChargeSlot);
             if (!clientPlayer.getItemCooldownManager().isCoolingDown(windChargeStack)) {
                 float orgPitch = clientPlayer.getPitch(1.0f);
                 float orgYaw = clientPlayer.getYaw(1.0f);
@@ -69,15 +69,18 @@ public class MixinKeyboardInput {
                     clientPlayer.setYaw(orgYaw + (float)(-45 + this.wallClimbingStatus.offset() * 45));
                     this.wallClimbingStatus = WallClimbing.resetClimbingStatus();
                     if (ElytraBoost.isElytraBoostIdle()) {
-                        clientPlayer.swingHand(hand);
-                        interactionManager.interactItem((PlayerEntity)clientPlayer, hand);
+                        int prevSlot = clientPlayer.getInventory().getSelectedSlot();
+                        clientPlayer.getInventory().setSelectedSlot(windChargeSlot);
+                        clientPlayer.swingHand(Hand.MAIN_HAND);
+                        interactionManager.interactItem((PlayerEntity)clientPlayer, Hand.MAIN_HAND);
+                        clientPlayer.getInventory().setSelectedSlot(prevSlot);
                     }
                     ((ClientPlayerEntityAccessor)clientPlayer).setLastPitchClient(90.0f);
                     clientPlayer.setPitch(orgPitch);
                     clientPlayer.setYaw(orgYaw);
                 } else if (ElytraBoost.isElytraBoostIdle() && (Config.JUMP_SPAM || clientPlayer.isOnGround())) {
                     if (clientPlayer.isSneaking() || JumpController.ON_SLIME_BLOCK) {
-                        MaceAttackAssistanceClient.sneakChargeJump(clientPlayer, hand);
+                        MaceAttackAssistanceClient.sneakChargeJump(clientPlayer, windChargeSlot);
                     } else {
                         MaceAttackAssistanceClient.requireChargeJump = true;
                         return false;

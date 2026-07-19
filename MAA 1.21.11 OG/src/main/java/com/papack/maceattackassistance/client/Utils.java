@@ -116,6 +116,15 @@ public class Utils {
         return null;
     }
 
+    public static int findWindChargeSlot(ClientPlayerEntity clientPlayer) {
+        for (int i = 0; i < 9; i++) {
+            if (clientPlayer.getInventory().getStack(i).isOf(Items.WIND_CHARGE)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public static Vec3d getDragonPos(EnderDragonEntity dragon) {
         EnderDragonPart hitPart = dragon.getBodyParts()[1];
         return ((Entity)Objects.requireNonNullElse(hitPart, dragon)).getEyePos();
