@@ -168,6 +168,24 @@ implements ClientModInitializer {
         return targetMob;
     }
 
+    public static void clearTargetIfFriend(String normalizedUsername) {
+        if (targetMob != null && targetMob instanceof net.minecraft.entity.player.PlayerEntity) {
+            String name = targetMob.getName().getString().trim().toLowerCase(java.util.Locale.ROOT);
+            if (name.equals(normalizedUsername)) {
+                targetMob = null;
+            }
+        }
+    }
+
+    public static void clearTargetIfAnyFriend() {
+        if (targetMob != null && targetMob instanceof net.minecraft.entity.player.PlayerEntity) {
+            String name = targetMob.getName().getString().trim().toLowerCase(java.util.Locale.ROOT);
+            if (com.papack.maceattackassistance.client.FriendManager.isFriend(name)) {
+                targetMob = null;
+            }
+        }
+    }
+
     public void onInitializeClient() {
         Config.initialize();
         JobManager.init();
@@ -258,6 +276,9 @@ implements ClientModInitializer {
             return ActionResult.PASS;
         });
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            if (com.papack.maceattackassistance.client.FriendManager.isFriend(entity)) {
+                return ActionResult.PASS;
+            }
             if (!Config.EXTREME && world.isClient() && !player.isCreative() && Utils.checkPlayerUUID((Entity)player) && entity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity)entity;
                 if (player instanceof ClientPlayerEntity) {
@@ -540,6 +561,10 @@ implements ClientModInitializer {
         if (targetMob == null || clientPlayer == null || !client.options.attackKey.isPressed()) {
             return;
         }
+        if (com.papack.maceattackassistance.client.FriendManager.isFriend(targetMob)) {
+            targetMob = null;
+            return;
+        }
         if (waiting_tick_counter > 0) {
             return;
         }
@@ -648,6 +673,9 @@ implements ClientModInitializer {
     }
 
     public static boolean isAllowedTarget(Entity entity) {
+        if (com.papack.maceattackassistance.client.FriendManager.isFriend(entity)) {
+            return false;
+        }
         if (!Config.AIM_ASSIST) {
             return true;
         }

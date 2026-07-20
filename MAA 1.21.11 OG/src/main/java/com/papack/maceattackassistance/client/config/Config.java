@@ -24,6 +24,9 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Environment(value=EnvType.CLIENT)
 public class Config {
     public static final Path MAA_CONF_DIR = Paths.get(String.valueOf(FabricLoader.getInstance().getGameDir()) + "/config/MaceAttackAssistance", new String[0]);
@@ -129,6 +132,7 @@ public class Config {
     public static int FLAP_SUPPRESSION_THRESHOLD;
     public static int FLAP_SUPPRESSION_TICK;
     public static boolean FOV_SUPPRESSION;
+    public static List<String> FRIENDS = new ArrayList<>();
     public static final int JUMP_COOLDOWN = 20;
     public static final float A_CURVE = 0.5f;
     public static final double FALLING_20 = 1.5;

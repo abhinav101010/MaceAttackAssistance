@@ -162,6 +162,9 @@ public abstract class MixinClientPlayerInteractionManager {
     @Inject(method={"attackEntity"}, at={@At(value="HEAD")}, cancellable=true)
     private void extremeAttackMode(PlayerEntity clientPlayer, Entity target, CallbackInfo ci) {
         try {
+            if (com.papack.maceattackassistance.client.FriendManager.isFriend(target)) {
+                return;
+            }
             boolean chkUuid = Utils.checkPlayerUUID((Entity)clientPlayer);
             if (Config.EXTREME && target instanceof LivingEntity) {
                 if (MaceAttackAssistanceClient.should_attack_interval || target.getId() <= 0 || !target.isAlive() || !chkUuid) {

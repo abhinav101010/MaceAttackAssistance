@@ -60,6 +60,9 @@ public abstract class MixinLivingEntityRenderer {
 
     @Unique
     private boolean shouldRenderGlowingOverlay(LivingEntity entity) {
+        if (com.papack.maceattackassistance.client.FriendManager.isFriend((Entity)entity)) {
+            return false;
+        }
         Entity target = MaceAttackAssistanceClient.getTargetMob();
         if (target != null) {
             return entity.getUuid().equals(target.getUuid());

@@ -15,6 +15,10 @@ import net.minecraft.util.Formatting;
 import net.minecraft.text.Text;
 import net.minecraft.client.gui.screen.Screen;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Environment(value=EnvType.CLIENT)
 public class ModConfigScreen {
     public static Screen getConfigScreen(Screen parent) {
@@ -130,6 +134,21 @@ public class ModConfigScreen {
         fov.addEntry(entryBuilder.startIntSlider((Text)Text.literal((String)"Rectangle Upward * 10 blocks"), Config.RADAR_UPWARD, 1, 3).setDefaultValue((Integer)ModConfigScreen.getDefaultValue(ConfigOperation.PROP_RADAR_UPWARD)).setSaveConsumer(newValue -> {            Config.RADAR_UPWARD = newValue;        }).setTooltip(new Text[]{Text.translatable((String)"config.mace_attack_assistance.option.tooltip.radar_upward")}).build());
         fov.addEntry(entryBuilder.startIntSlider((Text)Text.literal((String)"Rectangle Downward * 10 blocks"), Config.RADAR_DOWNWARD, 1, 8).setDefaultValue((Integer)ModConfigScreen.getDefaultValue(ConfigOperation.PROP_RADAR_DOWNWARD)).setSaveConsumer(newValue -> {            Config.RADAR_DOWNWARD = newValue;        }).setTooltip(new Text[]{Text.translatable((String)"config.mace_attack_assistance.option.tooltip.radar_downward")}).build());
         fov.addEntry(entryBuilder.startIntSlider((Text)Text.literal((String)"Rectangle Update Interval"), Config.RADAR_UPDATE_INTERVAL, 1, 10).setDefaultValue((Integer)ModConfigScreen.getDefaultValue(ConfigOperation.PROP_RADAR_UPDATE_INTERVAL)).setSaveConsumer(newValue -> {            Config.RADAR_UPDATE_INTERVAL = newValue;        }).setTooltip(new Text[]{Text.translatable((String)"config.mace_attack_assistance.option.tooltip.radar_update_interval")}).build());
+        ConfigCategory friends = builder.getOrCreateCategory((Text)Text.literal((String)"Friends"));
+        friends.addEntry(entryBuilder.startTextDescription((Text)Text.literal((String)"Players added to this list will never be targeted by any combat feature.").formatted(Formatting.GRAY)).build());
+        List<String> currentFriends = new ArrayList<>(com.papack.maceattackassistance.client.FriendManager.getFriends());
+        friends.addEntry(entryBuilder.startStrList((Text)Text.literal((String)"Friend List"), currentFriends).setDefaultValue(new ArrayList<>()).setSaveConsumer(newValue -> {
+            List<String> filtered = new ArrayList<>();
+            java.util.Set<String> seen = new java.util.HashSet<>();
+            for (String name : newValue) {
+                String trimmed = name.trim();
+                if (!trimmed.isEmpty() && seen.add(trimmed.toLowerCase(java.util.Locale.ROOT))) {
+                    filtered.add(trimmed);
+                }
+            }
+            Config.FRIENDS = filtered;
+            com.papack.maceattackassistance.client.FriendManager.setFriends(filtered);
+        }).setTooltip(new Text[]{Text.literal((String)"Enter Minecraft usernames. Duplicate and empty entries are removed automatically.").formatted(Formatting.GRAY)}).build());
         builder.setSavingRunnable(ConfigOperation::saveFile);
         return builder.build();
     }

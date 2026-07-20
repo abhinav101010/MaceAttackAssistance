@@ -114,6 +114,7 @@ public class ConfigOperation {
     public static final ConfigData PROP_FLAP_SUPPRESSION = new ConfigData("FlapSuppression", "true", Type.B);
     public static final ConfigData PROP_FLAP_SUPPRESSION_THRESHOLD = new ConfigData("FlapSuppressionThreshold", "10", Type.I);
     public static final ConfigData PROP_FLAP_SUPPRESSION_TICK = new ConfigData("FlapSuppressionTick", "20", Type.I);
+    public static final ConfigData PROP_FRIENDS = new ConfigData("Friends", "", Type.E);
     private static final List<ConfigData> configList = new ArrayList<ConfigData>(Arrays.asList(PROP_AIM_ASSIST, PROP_AIM_MODE, PROP_AIM_MODE, PROP_ALLOWED_AMBIENT, PROP_ALLOWED_HOSTILE, PROP_ALLOWED_IRON_GOLEM, PROP_ALLOWED_PASSIVE, PROP_ALLOWED_PLAYER, PROP_ALLOWED_VILLAGER, PROP_ATTACK_ASSISTANCE, PROP_ATTACK_DISTANCE[0], PROP_ATTACK_DISTANCE[1], PROP_ATTACK_DISTANCE[2], PROP_ATTACK_DISTANCE[3], PROP_ATTACK_RANGE, PROP_ATTACK_RANGE_DIFF, PROP_AUTO_MODE_THRESHOLD, PROP_AUTO_REFILL, PROP_AXE_SLOT, PROP_BASE_RADIUS, PROP_BREACH_LIMITED, PROP_BREACH_ON_GROUND, PROP_BREACH_SWAP, PROP_CAMERA_RETURN_BEHAVIOR, PROP_COILS, PROP_COLOR_AMBIENT, PROP_COLOR_HOSTILE, PROP_COLOR_IRON_GOLEM, PROP_COLOR_PASSIVE, PROP_COLOR_PLAYER, PROP_COLOR_VILLAGER, PROP_COLOR_WARDEN, PROP_COOL_DOWN_TICKS, PROP_DISPLAY_ACTION_BAR, PROP_EXTREME, PROP_FALL_VELOCITY[0], PROP_FALL_VELOCITY[1], PROP_FALL_VELOCITY[2], PROP_FALL_VELOCITY[3], PROP_FLAP_SUPPRESSION, PROP_FLAP_SUPPRESSION_THRESHOLD, PROP_FLAP_SUPPRESSION_TICK, PROP_FOV_HORIZONTAL, PROP_FOV_HORIZONTAL_ON_ZOOM, PROP_FOV_SUPPRESSION, PROP_FOV_VERTICAL, PROP_FOV_VERTICAL_ON_ZOOM, PROP_HEIGHT, PROP_HEIGHT_THRESHOLD, PROP_HIDE_MARKER, PROP_HOT_SWAP, PROP_JUMP_ASSIST, PROP_JUMP_SPAM, PROP_JUMP_SPAM_TICK, PROP_MACE_BREACH, PROP_MACE_PARTICLE, PROP_MACE_PRIMARY, PROP_MANUAL_CAMERA_PITCH, PROP_MANUAL_INCIDENCE_TICK, PROP_MARKER_OFFSET, PROP_MARKER_TYPE, PROP_MAX_SPEED_YAW, PROP_SPAIRAL_LENGTH, PROP_PARTICLE_ORDER, PROP_PARTICLE_TRANSITION_THRESHOLD, PROP_PERSPECTIVE_BACK_CROSSHAIR, PROP_PRIORITIZE_ROCKET, PROP_PRIORITIZE_WIND_CHARGE, PROP_RADAR_DOWNWARD, PROP_RADAR_HORIZONTAL, PROP_RADAR_UPDATE_INTERVAL, PROP_RADAR_UPWARD, PROP_REFLECTION_ANGLE, PROP_ROCKET_BLITZ, PROP_ROCKET_BLITZ_SLOT, PROP_ROCKET_TRIGGER, PROP_SIZE, PROP_SNAPBACK, PROP_SNAPBACK_THRESHOLD, PROP_SNAPBACK_TOLERANCE, PROP_SNAPBACK_Y_OFFSET, PROP_SPEED, PROP_SPIRAL_ALPHA, PROP_SPIRAL_GAMMA, PROP_SPIRAL_COUNT, PROP_STUN_SLAMMING, PROP_SWING_TOGGLE, PROP_TARGET_MARKER, PROP_TARGET_SEARCH_MODE, PROP_TOGGLE_SLOT, PROP_WALL_CLIMBING, PROP_WAVE_AMPLITUDE, PROP_WAVE_SPEED, PROP_WEAPON_SWING, PROP_ZOOM_STEP, PROP_ZOOM_VIEW, PROP_RETURN_TO_PREV_SLOT));
 
     public static void existFile() {
@@ -240,6 +241,18 @@ public class ConfigOperation {
         Config.CAMERA_RETURN_BEHAVIOR = Boolean.parseBoolean(properties.getProperty(ConfigOperation.PROP_CAMERA_RETURN_BEHAVIOR.label, ConfigOperation.PROP_CAMERA_RETURN_BEHAVIOR.defaultValue));
         Config.PERSPECTIVE_BACK_CROSSHAIR = Boolean.parseBoolean(properties.getProperty(ConfigOperation.PROP_PERSPECTIVE_BACK_CROSSHAIR.label, ConfigOperation.PROP_PERSPECTIVE_BACK_CROSSHAIR.defaultValue));
         Config.EXTREME = Boolean.parseBoolean(properties.getProperty(ConfigOperation.PROP_EXTREME.label, ConfigOperation.PROP_EXTREME.defaultValue));
+        String friendsStr = properties.getProperty(ConfigOperation.PROP_FRIENDS.label, ConfigOperation.PROP_FRIENDS.defaultValue);
+        Config.FRIENDS = new ArrayList<>();
+        if (friendsStr != null && !friendsStr.isBlank()) {
+            String[] parts = friendsStr.split(";");
+            for (String part : parts) {
+                String trimmed = part.trim();
+                if (!trimmed.isEmpty()) {
+                    Config.FRIENDS.add(trimmed);
+                }
+            }
+        }
+        com.papack.maceattackassistance.client.FriendManager.setFriends(Config.FRIENDS);
     }
 
     public static void saveFile() {
@@ -331,6 +344,14 @@ public class ConfigOperation {
             properties.setProperty(ConfigOperation.PROP_CAMERA_RETURN_BEHAVIOR.label, String.valueOf(Config.CAMERA_RETURN_BEHAVIOR));
             properties.setProperty(ConfigOperation.PROP_PERSPECTIVE_BACK_CROSSHAIR.label, String.valueOf(Config.PERSPECTIVE_BACK_CROSSHAIR));
             properties.setProperty(ConfigOperation.PROP_EXTREME.label, String.valueOf(Config.EXTREME));
+            StringBuilder friendsBuilder = new StringBuilder();
+            for (int i = 0; i < Config.FRIENDS.size(); ++i) {
+                if (i > 0) {
+                    friendsBuilder.append(";");
+                }
+                friendsBuilder.append(Config.FRIENDS.get(i));
+            }
+            properties.setProperty(ConfigOperation.PROP_FRIENDS.label, friendsBuilder.toString());
             for (int i = 0; i < 4; ++i) {
                 properties.setProperty(ConfigOperation.PROP_ATTACK_DISTANCE[i].label, String.valueOf(Config.ATTACK_DISTANCE[i]));
                 properties.setProperty(ConfigOperation.PROP_FALL_VELOCITY[i].label, String.valueOf(Config.FALL_VELOCITY[i]));

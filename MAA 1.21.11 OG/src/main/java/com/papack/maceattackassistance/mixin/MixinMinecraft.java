@@ -65,9 +65,15 @@ public abstract class MixinMinecraft {
                     Vec3d playerVelocity = clientPlayer.getVelocity();
                     double yV = playerVelocity.getY();
                     int isOverSpeed = this.speedOverThreshold(clientPlayer);
-                    Entity target = MaceAttackAssistanceClient.getTargetMob();
+                Entity target = MaceAttackAssistanceClient.getTargetMob();
+                if (target != null && com.papack.maceattackassistance.client.FriendManager.isFriend(target)) {
+                    return instance.wasPressed();
+                }
                     if (target == null) {
                         target = client.targetedEntity;
+                    }
+                    if (target != null && com.papack.maceattackassistance.client.FriendManager.isFriend(target)) {
+                        return instance.wasPressed();
                     }
                     if (target instanceof LivingEntity) {
                         LivingEntity livingEntity = (LivingEntity)target;
