@@ -505,7 +505,7 @@ implements ClientModInitializer {
         targetMob = this.findNearestMob(client, clientPlayer);
         if (targetMob != null) {
             target_life_counter = 20;
-            client.execute(() -> this.calculateTargetYawPitch(clientPlayer, targetMob));
+            this.calculateTargetYawPitch(clientPlayer, targetMob);
         }
     }
 
@@ -582,9 +582,9 @@ implements ClientModInitializer {
         }
         if (this.instant_attack) {
             ClientPlayerInteractionManager interactionManager = client.interactionManager;
-            Entity targetedEntity = client.targetedEntity;
-            if (targetedEntity instanceof LivingEntity) {
-                LivingEntity livingEntity = (LivingEntity)targetedEntity;
+            Entity attackTarget = targetMob != null ? targetMob : client.targetedEntity;
+            if (attackTarget instanceof LivingEntity) {
+                LivingEntity livingEntity = (LivingEntity)attackTarget;
                 if (interactionManager != null && client.world != null && !JobManager.checkStatus(StatusType.INSTANT_ATTACK_INTERVAL) && client.options.attackKey.isPressed()) {
                     JobManager.setOrder(StatusType.INSTANT_ATTACK_INTERVAL, -1);
                     clientPlayer.swingHand(clientPlayer.getActiveHand());
@@ -630,7 +630,8 @@ implements ClientModInitializer {
             this.instant_attack = true;
             return 1.0f;
         }
-        if (waiting_tick_counter <= 0 && distanceToTarget <= 4.0 && clientPlayer.getVelocity().getY() < Config.VELOCITY_BY_DISTANCE[10]) {
+        if (waiting_tick_counter <= 0 && distanceToTarget <= 4.0) {
+            this.instant_attack = true;
             return 1.0f;
         }
         double normalizedFallSpeed = Math.abs(Math.min(fallSpeed / 1.5, 1.0));

@@ -164,7 +164,7 @@ public abstract class MixinMinecraft {
     public boolean willBeInRange(ClientPlayerEntity clientPlayer, int ticksAhead, boolean flagStun, float offset, Entity target) {
         boolean flag1stHit;
         boolean targetIsOnGround = target.isOnGround();
-        float allowDistance = (float)Config.ATTACK_RANGE * 0.01f;
+        float allowDistance = (float)Config.ATTACK_RANGE * 0.01f + 0.3f;
         float yDiffThreshold = (float)Config.ATTACK_RANGE_DIFF * 0.01f;
         float standingEyeHeight = target.getStandingEyeHeight();
         float dynamicOffset = standingEyeHeight > 1.0f ? standingEyeHeight * 0.1f : 0.0f;

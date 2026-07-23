@@ -441,6 +441,9 @@ public class JobManager {
         ClientPlayerEntity clientPlayer = JobManager.client.player;
         ClientPlayerInteractionManager interactionManager = JobManager.getInteractionManager();
         Entity target = JobManager.client.targetedEntity;
+        if (target == null) {
+            target = MaceAttackAssistanceClient.getTargetMob();
+        }
         if (interactionManager != null && clientPlayer != null && target != null) {
             interactionManager.attackEntity((PlayerEntity)clientPlayer, target);
         }
